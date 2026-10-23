@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAFFA — Slow Roast Coffee | Coffee for the Quiet Hours</title>
+<meta name="description" content="Kaffa is a cinematic slow-roast coffee house. Single-origin beans, roasted in small batches, poured slowly. Get the free Slow Roast Guide.">
+<style>
+:root{
+  --bg:#0b0806; --bg2:#100c08; --panel:#161009; --panel2:#1d150c;
+  --line:rgba(233,220,195,.14); --txt:#ede3d0; --mut:#b3a68d; --dim:#7d7261;
+  --acc:#d29a55; --acc2:#b57e3c;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.65;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.kicker{font-size:11px;letter-spacing:.36em;text-transform:uppercase;color:var(--acc);font-weight:700}
+h1,h2,h3.serif{font-family:var(--serif);font-weight:400}
+em{color:var(--acc)}
+
+/* film grain + vignette */
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:80;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  animation:grain 9s steps(10) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-2%)}80%{transform:translate(3%,3%)}}
+
+/* nav */
+nav{position:fixed;inset:0 0 auto 0;z-index:60;background:rgba(11,8,6,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo{font-family:var(--serif);font-size:23px;letter-spacing:.3em}
+.logo b{color:var(--acc);font-weight:400}
+.nav-links{display:flex;gap:28px;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.nav-links a:hover{color:var(--txt)}
+.nav-cta{background:transparent;color:var(--acc);border:1px solid var(--acc);padding:9px 19px;border-radius:99px;font-size:13px;font-weight:700}
+.nav-cta:hover{background:var(--acc);color:#160f06}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* hero */
+.hero{position:relative;height:100vh;height:100svh;min-height:620px;overflow:hidden;display:flex;align-items:flex-end}
+.hero .bg{position:absolute;inset:0;overflow:hidden}
+.hero .bg img{width:100%;height:112%;object-fit:cover;object-position:center 30%;animation:slowzoom 26s ease-in-out infinite alternate;will-change:transform}
+@keyframes slowzoom{from{transform:scale(1.0)}to{transform:scale(1.13)}}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,5,3,.62) 0%,rgba(8,5,3,.08) 34%,rgba(8,5,3,.34) 62%,rgba(8,5,3,.94) 100%)}
+.hero .bar-top,.hero .bar-bot{position:absolute;left:0;right:0;height:5.5vh;background:#000;z-index:3}
+.hero .bar-top{top:0}.hero .bar-bot{bottom:0}
+.hero-in{position:relative;z-index:4;width:100%;padding-bottom:12vh}
+.hero h1{font-size:clamp(44px,8vw,104px);line-height:.98;letter-spacing:.01em;text-transform:uppercase}
+.hero h1 .row{display:block}
+.hero h1 .thin{font-style:italic;text-transform:none;color:var(--acc);font-size:.82em}
+.hero p{margin-top:18px;max-width:520px;color:#ddd2ba;font-size:17px}
+.hero-btns{margin-top:28px;display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;padding:14px 28px;border-radius:99px;font-weight:800;font-size:14px;border:1px solid transparent;transition:.2s}
+.btn-acc{background:var(--acc);color:#160f06}
+.btn-acc:hover{background:#e2af6d;transform:translateY(-2px)}
+.btn-ghost{background:rgba(0,0,0,.3);color:var(--txt);border-color:rgba(237,227,208,.35);backdrop-filter:blur(6px)}
+.btn-ghost:hover{border-color:var(--txt)}
+.hero-meta{position:absolute;z-index:4;right:24px;bottom:12vh;text-align:right;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:rgba(237,227,208,.75);line-height:2.1}
+@media(max-width:760px){.hero-meta{display:none}}
+
+/* marquee */
+.marquee{background:#000;border-block:1px solid var(--line);overflow:hidden;padding:15px 0;white-space:nowrap}
+.marquee .track{display:inline-block;animation:mq 30s linear infinite;font-family:var(--serif);font-style:italic;font-size:17px;color:var(--mut)}
+.marquee .track b{color:var(--acc);font-weight:400;padding:0 18px}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* sections */
+section{padding:100px 0}
+.sec-head{max-width:680px;margin-bottom:44px}
+.sec-head h2{font-size:clamp(30px,4.4vw,50px);line-height:1.1;margin-top:12px}
+.sec-head p{color:var(--mut);margin-top:12px;font-size:16.5px}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* story */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:58px;align-items:center}
+@media(max-width:880px){.story{grid-template-columns:1fr}}
+.story .ph{border-radius:18px;overflow:hidden;position:relative}
+.story .ph img{width:100%;object-fit:cover;aspect-ratio:4/3.3}
+.story .ph::after{content:"EST. 2016 — ROAST No. 214";position:absolute;bottom:14px;left:16px;font-size:10.5px;letter-spacing:.28em;color:rgba(255,255,255,.85)}
+.story p{color:var(--mut);margin-top:14px;font-size:16.5px}
+.story p b{color:var(--txt);font-weight:600}
+.stats{display:flex;gap:34px;margin-top:28px;flex-wrap:wrap}
+.stats div b{display:block;font-family:var(--serif);font-size:29px;font-weight:400;color:var(--acc)}
+.stats div span{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+
+/* craft */
+.craft{background:var(--bg2);border-block:1px solid var(--line)}
+.craft-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:44px}
+@media(max-width:760px){.craft-grid{grid-template-columns:1fr}}
+.craft-grid figure{border-radius:18px;overflow:hidden;position:relative}
+.craft-grid img{width:100%;object-fit:cover;aspect-ratio:16/10.5;transition:transform .8s ease}
+.craft-grid figure:hover img{transform:scale(1.05)}
+.craft-grid figcaption{position:absolute;bottom:14px;left:16px;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:rgba(255,255,255,.9);text-shadow:0 2px 12px rgba(0,0,0,.8)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:880px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;cursor:pointer;transition:.25s;text-align:left;color:var(--txt)}
+.step:hover{border-color:rgba(210,154,85,.55)}
+.step.on{border-color:var(--acc);background:var(--panel2)}
+.step .n{font-family:var(--serif);font-style:italic;color:var(--acc);font-size:15px}
+.step h3{font-size:17px;margin:8px 0 6px;font-weight:700}
+.step p{color:var(--mut);font-size:13.5px;display:none}
+.step.on p{display:block}
+
+/* menu */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.chip{padding:9px 18px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--mut);font-size:13px;font-weight:700}
+.chip:hover{color:var(--txt)}
+.chip.on{background:var(--acc);color:#160f06;border-color:var(--acc)}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:920px){.menu-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.menu-grid{grid-template-columns:1fr}}
+.dish{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s,border-color .3s}
+.dish:hover{transform:translateY(-5px);border-color:rgba(210,154,85,.5)}
+.dish.hide{display:none}
+.dish .ph{aspect-ratio:16/10;overflow:hidden}
+.dish .ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.dish:hover .ph img{transform:scale(1.07)}
+.dish .bd{padding:19px 20px 21px;display:flex;flex-direction:column;gap:7px;flex:1}
+.dish .tag{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--acc);font-weight:800}
+.dish h3{font-family:var(--serif);font-size:21px;font-weight:400}
+.dish p{color:var(--mut);font-size:13.5px;flex:1}
+.dish .row{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.dish .price{font-family:var(--serif);font-size:21px;color:var(--txt)}
+.add{background:transparent;border:1px solid var(--acc);color:var(--acc);border-radius:99px;padding:8px 17px;font-weight:800;font-size:12.5px}
+.add:hover,.add.added{background:var(--acc);color:#160f06}
+
+/* order tray */
+.tray{position:fixed;left:50%;transform:translate(-50%,140%);bottom:18px;z-index:70;background:#1d150c;border:1px solid rgba(210,154,85,.55);border-radius:99px;padding:10px 10px 10px 24px;display:flex;align-items:center;gap:18px;box-shadow:0 18px 50px rgba(0,0,0,.6);transition:transform .45s cubic-bezier(.2,.9,.25,1.1);max-width:calc(100vw - 24px)}
+.tray.show{transform:translate(-50%,0)}
+.tray .info{font-size:14px;white-space:nowrap}
+.tray .info b{color:var(--acc);font-family:var(--serif);font-size:17px}
+.tray button{border:none;border-radius:99px;padding:11px 20px;font-weight:800;font-size:13px}
+.tray .confirm{background:var(--acc);color:#160f06}
+.tray .clear{background:transparent;color:var(--mut);border:1px solid var(--line) !important}
+.tray .done-msg{color:var(--acc);font-family:var(--serif);font-style:italic;font-size:15px;white-space:nowrap}
+
+/* guide */
+.guide{position:relative;padding:110px 0;overflow:hidden}
+.guide .bgimg{position:absolute;inset:0}
+.guide .bgimg img{width:100%;height:100%;object-fit:cover;opacity:.34}
+.guide .bgimg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,5,3,.94) 30%,rgba(8,5,3,.45))}
+.guide-in{position:relative;z-index:2;max-width:600px}
+.guide h2{font-size:clamp(30px,4.6vw,52px);line-height:1.1;margin-top:12px}
+.guide p{color:#d8cbae;margin-top:14px;font-size:16.5px}
+.guide ul{list-style:none;margin:20px 0 28px;color:var(--mut);font-size:15px}
+.guide ul li{padding:7px 0;border-bottom:1px solid var(--line)}
+.guide ul li::before{content:"— ";color:var(--acc)}
+.guide-form{display:flex;gap:10px;flex-wrap:wrap}
+.guide-form input{flex:1;min-width:230px;background:rgba(11,8,6,.8);border:1px solid rgba(233,220,195,.3);color:var(--txt);border-radius:99px;padding:14px 22px;font-size:15px;font-family:inherit}
+.guide-form input:focus{outline:2px solid rgba(210,154,85,.6)}
+.guide-form button{background:var(--acc);color:#160f06;border:none;border-radius:99px;padding:14px 28px;font-weight:800;font-size:14.5px}
+.guide-form button:hover{background:#e2af6d}
+.g-err{display:none;color:#ff9c8a;font-size:13px;margin-top:10px}
+.g-err.show{display:block}
+.g-success{display:none;background:rgba(11,8,6,.85);border:1px solid rgba(210,154,85,.55);border-radius:18px;padding:28px}
+.g-success.show{display:block}
+.g-success h3{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:8px}
+.g-success p{color:var(--mut);font-size:14.5px;margin:0}
+
+/* visit */
+.visit{display:grid;grid-template-columns:1.05fr .95fr;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--panel)}
+@media(max-width:860px){.visit{grid-template-columns:1fr}}
+.visit img{width:100%;height:100%;object-fit:cover;min-height:300px}
+.visit .v-in{padding:38px}
+.visit h3{font-family:var(--serif);font-size:27px;font-weight:400;margin:8px 0 12px}
+.visit table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14.5px}
+.visit td{padding:9px 0;border-bottom:1px solid var(--line);color:var(--mut)}
+.visit td:last-child{text-align:right;color:var(--txt)}
+
+footer{border-top:1px solid var(--line);padding:42px 0 54px;color:var(--dim);font-size:13.5px;background:#000}
+.foot-in{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="#top">KAF<b>FA</b></a>
+    <div class="nav-links">
+      <a href="#story">Our Story</a>
+      <a href="#craft">The Craft</a>
+      <a href="#menu">Menu</a>
+      <a href="#guide">The Guide</a>
+      <a href="#visit">Visit</a>
+    </div>
+    <button class="nav-cta" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})">Get the Free Guide</button>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="bg"><img id="heroImg" src="images/hero.jpg" alt="Coffee pouring into a cup, steam rising in low light"></div>
+  <div class="shade"></div>
+  <div class="bar-top"></div>
+  <div class="bar-bot"></div>
+  <div class="wrap hero-in">
+    <div class="kicker">Kaffa — Slow Roast Coffee House</div>
+    <h1><span class="row">Coffee for</span><span class="row">the <span class="thin">quiet</span> hours.</span></h1>
+    <p>Single-origin beans, roasted in 12-kilo batches and poured at the pace coffee deserves. No rush. No noise. Just the cup.</p>
+    <div class="hero-btns">
+      <a class="btn btn-acc" href="#menu">See the Menu</a>
+      <a class="btn btn-ghost" href="#guide">Get the Slow Roast Guide</a>
+    </div>
+  </div>
+  <div class="hero-meta">Single Origin<br>Small Batch<br>Est. 2016</div>
+</header>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="mqTrack"></div>
+</div>
+
+<!-- ============ STORY ============ -->
+<section id="story">
+  <div class="wrap">
+    <div class="story">
+      <div class="ph reveal"><img src="images/story.jpg" alt="Pour-over brewing at the Kaffa bar"></div>
+      <div class="reveal">
+        <div class="kicker">Our Story</div>
+        <h2 class="serif" style="font-size:clamp(29px,3.8vw,44px);line-height:1.15;margin-top:12px">We named it after the forest where coffee <em>began</em></h2>
+        <p>Kaffa is the Ethiopian highland region where coffee was first found growing wild. Our house is a tribute to that slowness — beans bought from <b>nine small farms</b>, roasted two streets away, and rested a full ten days before they ever meet water.</p>
+        <p>Everything here is deliberate: the low light, the heavy cups, the ninety seconds we ask you to wait while the bloom settles. It is not fast coffee. It was never meant to be.</p>
+        <div class="stats">
+          <div><b>9</b><span>Partner Farms</span></div>
+          <div><b>12 kg</b><span>Batch Size</span></div>
+          <div><b>10 days</b><span>Rest Before Pour</span></div>
+          <div><b>214</b><span>Roasts &amp; Counting</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CRAFT ============ -->
+<section class="craft" id="craft">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">The Craft</div>
+      <h2 class="serif">Four steps. <em>Zero shortcuts.</em></h2>
+      <p>Tap each step to see how a Kaffa cup is made — the same process we teach, free, in the Slow Roast Guide.</p>
+    </div>
+    <div class="craft-grid reveal">
+      <figure><img src="images/craft.jpg" alt="Portafilter and a finished latte on dark timber"><figcaption>The Bar — Timber &amp; Brass</figcaption></figure>
+      <figure><img src="images/beans.jpg" alt="Freshly roasted beans in a burlap sack"><figcaption>Roast No. 214 — Just Landed</figcaption></figure>
+    </div>
+    <div class="steps reveal" id="steps">
+      <button class="step on"><div class="n">Step — 01</div><h3>Source</h3><p>Nine farms, three continents, one rule: we only buy lots we have cupped ourselves, at prices the growers set.</p></button>
+      <button class="step"><div class="n">Step — 02</div><h3>Roast</h3><p>Small 12-kilo batches, roasted light enough to keep the origin in the cup — never dark enough to hide it.</p></button>
+      <button class="step"><div class="n">Step — 03</div><h3>Rest</h3><p>Ten days of rest lets the roast settle and the harsh edges leave. Most cafés skip this. You can taste that they did.</p></button>
+      <button class="step"><div class="n">Step — 04</div><h3>Pour</h3><p>Water at 94 degrees, a slow spiral, a ninety-second bloom. The pour is the last ingredient — and the loudest one.</p></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MENU ============ -->
+<section id="menu">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">Menu Highlights</div>
+      <h2 class="serif">Six cups we're <em>known for</em></h2>
+      <p>Add to your order and we'll have it waiting at the bar. Prices include the quiet.</p>
+    </div>
+    <div class="chips reveal" id="menuChips">
+      <button class="chip on" data-filter="All">All</button>
+      <button class="chip" data-filter="Hot">Hot</button>
+      <button class="chip" data-filter="Cold">Cold</button>
+      <button class="chip" data-filter="Signature">Signature</button>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+</section>
+
+<!-- ============ TEXTURE BREAK ============ -->
+<div style="height:220px;background:url('images/texture.jpg') center/cover fixed;position:relative">
+  <div style="position:absolute;inset:0;background:rgba(8,5,3,.55);display:flex;align-items:center;justify-content:center;text-align:center;padding:0 20px">
+    <p class="serif" style="font-family:Georgia,serif;font-size:clamp(21px,3.2vw,32px);font-style:italic;color:#f0e7d3">"The pour is the last ingredient — <span style="color:var(--acc)">and the loudest one.</span>"</p>
+  </div>
+</div>
+
+<!-- ============ GUIDE ============ -->
+<section class="guide" id="guide">
+  <div class="bgimg"><img src="images/guide.jpg" alt=""></div>
+  <div class="wrap">
+    <div class="guide-in reveal">
+      <div class="kicker">The Slow Roast Guide — Free</div>
+      <h2 class="serif">Make café coffee <em>at home,</em> in one email.</h2>
+      <p>Our head roaster wrote down everything: the ratios, the water, the rest times, the mistakes to avoid. It's the guide we wish someone had handed us.</p>
+      <ul>
+        <li>The 1:15 golden ratio — and when to break it</li>
+        <li>Water temperature, explained without a physics degree</li>
+        <li>How to read a roast date like a roaster</li>
+        <li>Three home set-ups, from $20 to $200</li>
+      </ul>
+      <form class="guide-form" id="guideForm" novalidate>
+        <input type="email" id="gEmail" placeholder="your@email.com" autocomplete="email" aria-label="Email address">
+        <button type="submit">Send Me the Guide</button>
+      </form>
+      <div class="g-err" id="gErr">Please enter a valid email address so we can send it.</div>
+      <div class="g-success" id="gSuccess">
+        <h3>It's on its way.</h3>
+        <p id="gSuccessTxt"></p>
+      </div>
+      <p style="color:var(--dim);font-size:12.5px;margin-top:14px">One email. No spam, no list-selling — we're a coffee house, not a marketing firm. Demo form: confirmation is shown on screen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISIT ============ -->
+<section id="visit" style="padding-top:0">
+  <div class="wrap">
+    <div class="visit reveal">
+      <img src="images/cafe.jpg" alt="Inside the Kaffa coffee house at night">
+      <div class="v-in">
+        <div class="kicker">Visit</div>
+        <h3>The House</h3>
+        <p style="color:var(--mut)">14 Ember Lane, Old Mill District<br>+1 (555) 014-2214 — hello@kaffa.example</p>
+        <table>
+          <tr><td>Monday – Friday</td><td>7:00 AM – 9:00 PM</td></tr>
+          <tr><td>Saturday</td><td>8:00 AM – 10:00 PM</td></tr>
+          <tr><td>Sunday</td><td>8:00 AM – 6:00 PM</td></tr>
+          <tr><td>Cupping Nights</td><td>First Friday, monthly</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div><span class="logo" style="font-size:16px">KAF<b>FA</b></span><br>Slow roast coffee house.</div>
+    <div>Demo website — menu, prices and hours are illustrative.<br>Photos: Unsplash. Rebrand in minutes via the README.</div>
+  </div>
+</footer>
+
+<!-- order tray -->
+<div class="tray" id="tray">
+  <span class="info" id="trayInfo"></span>
+  <button class="clear" id="trayClear">Clear</button>
+  <button class="confirm" id="trayConfirm">Place Order</button>
+</div>
+
+<script>
+/* ================= MARQUEE ================= */
+var phrase = 'Slow Roast <b>·</b> Single Origin <b>·</b> Small Batch <b>·</b> Rested Ten Days <b>·</b> Poured Slowly <b>·</b> ';
+document.getElementById('mqTrack').innerHTML = phrase.repeat(6);
+
+/* ================= HERO PARALLAX ================= */
+var heroImg = document.getElementById('heroImg');
+var heroEl = document.querySelector('.hero');
+var ticking = false;
+window.addEventListener('scroll', function(){
+  if (!ticking){
+    ticking = true;
+    requestAnimationFrame(function(){
+      var y = window.scrollY;
+      if (y < window.innerHeight * 1.2) heroImg.style.translate = '0 ' + (y * 0.16) + 'px';
+      ticking = false;
+    });
+  }
+}, {passive:true});
+
+/* ================= CRAFT STEPS ================= */
+document.getElementById('steps').addEventListener('click', function(e){
+  var step = e.target.closest('.step'); if (!step) return;
+  var all = this.querySelectorAll('.step');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('on');
+  step.classList.add('on');
+});
+
+/* ================= MENU + ORDER ================= */
+var MENU = [
+  {id:'espresso', name:'Espresso Noir', cat:'Hot', price:4.50, img:'images/menu-espresso.jpg', desc:'A double shot of the current roast — dense, dark-fruit sweet, gone in four sips.'},
+  {id:'latte', name:'Velvet Latte', cat:'Hot', price:5.75, img:'images/menu-latte.jpg', desc:'Silked milk over a double shot, poured to a rosetta. Our most-ordered cup, by far.'},
+  {id:'coldbrew', name:'Amber Cold Brew', cat:'Cold', price:6.25, img:'images/menu-iced.jpg', desc:'Steeped 18 hours, served over one clear cube. Chocolate first, citrus at the end.'},
+  {id:'flatwhite', name:'Flat White', cat:'Hot', price:5.50, img:'images/menu-flatwhite.jpg', desc:'A double ristretto under a whisper of steamed milk. Small cup, serious intent.'},
+  {id:'flight', name:'The Tasting Flight', cat:'Signature', price:14.00, img:'images/menu-flight.jpg', desc:'Three origins, three small cups, one story. The fastest way to learn your own taste.'},
+  {id:'cortado', name:'Cortado & Cream', cat:'Signature', price:5.25, img:'images/menu-cortado.jpg', desc:'Equal parts espresso and warm cream-top milk in a small glass. Kaffa\u2019s signature.'}
+];
+var grid = document.getElementById('menuGrid');
+var order = {};
+function money(n){ return '$' + n.toFixed(2); }
+function renderMenu(filter){
+  grid.innerHTML = MENU.map(function(m){
+    var inOrder = order[m.id] ? ' added' : '';
+    var label = order[m.id] ? 'In Order (' + order[m.id] + ')' : 'Add to Order';
+    return '<article class="dish' + (filter !== 'All' && m.cat !== filter ? ' hide' : '') + '" data-id="' + m.id + '">' +
+      '<div class="ph"><img src="' + m.img + '" alt="' + m.name + '" loading="lazy"></div>' +
+      '<div class="bd"><div class="tag">' + m.cat + '</div><h3>' + m.name + '</h3><p>' + m.desc + '</p>' +
+      '<div class="row"><span class="price">' + money(m.price) + '</span>' +
+      '<button class="add' + inOrder + '" data-add="' + m.id + '">' + label + '</button></div></div></article>';
+  }).join('');
+}
+renderMenu('All');
+document.getElementById('menuChips').addEventListener('click', function(e){
+  var chip = e.target.closest('.chip'); if (!chip) return;
+  var chips = this.querySelectorAll('.chip');
+  for (var i = 0; i < chips.length; i++) chips[i].classList.remove('on');
+  chip.classList.add('on');
+  renderMenu(chip.getAttribute('data-filter'));
+});
+var tray = document.getElementById('tray'), trayInfo = document.getElementById('trayInfo');
+function trayUpdate(){
+  var count = 0, total = 0;
+  for (var k in order){ count += order[k]; }
+  MENU.forEach(function(m){ if (order[m.id]) total += order[m.id] * m.price; });
+  if (count === 0){ tray.classList.remove('show'); return; }
+  trayInfo.innerHTML = count + (count === 1 ? ' drink' : ' drinks') + ' — <b>' + money(total) + '</b>';
+  tray.classList.add('show');
+}
+grid.addEventListener('click', function(e){
+  var btn = e.target.closest('[data-add]'); if (!btn) return;
+  var id = btn.getAttribute('data-add');
+  order[id] = (order[id] || 0) + 1;
+  var m = MENU.filter(function(x){ return x.id === id; })[0];
+  btn.textContent = 'In Order (' + order[id] + ')';
+  btn.classList.add('added');
+  trayUpdate();
+});
+document.getElementById('trayClear').addEventListener('click', function(){
+  order = {};
+  var active = document.querySelector('#menuChips .chip.on');
+  renderMenu(active ? active.getAttribute('data-filter') : 'All');
+  trayUpdate();
+});
+document.getElementById('trayConfirm').addEventListener('click', function(){
+  var count = 0;
+  for (var k in order) count += order[k];
+  if (!count) return;
+  trayInfo.innerHTML = '<span class="done-msg">Order placed — we\u2019ll call your name at the bar.</span>';
+  document.getElementById('trayClear').style.display = 'none';
+  this.style.display = 'none';
+  order = {};
+  var active = document.querySelector('#menuChips .chip.on');
+  renderMenu(active ? active.getAttribute('data-filter') : 'All');
+  setTimeout(function(){
+    tray.classList.remove('show');
+    document.getElementById('trayClear').style.display = '';
+    document.getElementById('trayConfirm').style.display = '';
+  }, 3200);
+});
+
+/* ================= GUIDE FORM ================= */
+document.getElementById('guideForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var email = document.getElementById('gEmail').value.trim();
+  var err = document.getElementById('gErr');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    err.classList.add('show');
+    document.getElementById('gEmail').focus();
+    return;
+  }
+  err.classList.remove('show');
+  document.getElementById('gSuccessTxt').textContent =
+    'The Slow Roast Guide is on its way to ' + email + '. Put the kettle on — by the time it boils, it will be in your inbox.';
+  this.style.display = 'none';
+  document.getElementById('gSuccess').classList.add('show');
+});
+
+/* ================= REVEALS ================= */
+var io = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+}, {threshold: 0.12});
+document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
+</body>
+</html>
